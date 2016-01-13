@@ -86,7 +86,7 @@
     Private Sub txtbatch_no_KeyDown(ByVal sender As System.Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles txtbatch_no.KeyDown
         If e.KeyCode = Keys.Enter Then
             If txtbatch_no.Text <> "" Then
-                txtcarton_wg.Focus()
+                txtpack_size.Focus()
             End If
         End If
     End Sub
