@@ -76,7 +76,7 @@ Partial Class FrmScrapPrint
         Me.GroupBox2.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.GroupBox2.Name = "GroupBox2"
         Me.GroupBox2.Padding = New System.Windows.Forms.Padding(3, 4, 3, 4)
-        Me.GroupBox2.Size = New System.Drawing.Size(562, 247)
+        Me.GroupBox2.Size = New System.Drawing.Size(562, 264)
         Me.GroupBox2.TabIndex = 6
         Me.GroupBox2.TabStop = False
         Me.C1ThemeController1.SetTheme(Me.GroupBox2, "(default)")
@@ -273,7 +273,7 @@ Partial Class FrmScrapPrint
         '
         'btnsave
         '
-        Me.btnsave.Location = New System.Drawing.Point(141, 267)
+        Me.btnsave.Location = New System.Drawing.Point(141, 281)
         Me.btnsave.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.btnsave.Name = "btnsave"
         Me.btnsave.Size = New System.Drawing.Size(87, 29)
@@ -285,7 +285,7 @@ Partial Class FrmScrapPrint
         '
         'btnclear
         '
-        Me.btnclear.Location = New System.Drawing.Point(247, 267)
+        Me.btnclear.Location = New System.Drawing.Point(247, 281)
         Me.btnclear.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.btnclear.Name = "btnclear"
         Me.btnclear.Size = New System.Drawing.Size(87, 29)
@@ -297,7 +297,7 @@ Partial Class FrmScrapPrint
         '
         'btnclose
         '
-        Me.btnclose.Location = New System.Drawing.Point(354, 267)
+        Me.btnclose.Location = New System.Drawing.Point(354, 281)
         Me.btnclose.Margin = New System.Windows.Forms.Padding(3, 4, 3, 4)
         Me.btnclose.Name = "btnclose"
         Me.btnclose.Size = New System.Drawing.Size(87, 29)
