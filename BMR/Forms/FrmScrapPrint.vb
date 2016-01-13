@@ -177,7 +177,7 @@
 
                 Dim query As String = "insert into barcode(Carton_Serial_no,Product_code,Product_type,Pur_date,sort_code,pur_loc" & _
                              ",Batch_no,Loc_code,user_code,packet_size,Carton_Weight,status,Sap_Code,FullBatch) values('" & Serial_no & "'," & _
-                             "" & CType(cmbproduct.SelectedItem, itemdata).Value & ",'SFG','" & datestr & "'," & _
+                             "" & CType(cmbproduct.SelectedItem, itemdata).Value & ",'SCR','" & datestr & "'," & _
                              "0," & Loc_Code & ",'" & txtbatch_no.Text & "'," & _
                              "" & Loc_Code & "," & User_Code & ",0," & txtcarton_weight.Text & ",0,'" & txtsap_code.Text & "','" & FullBatch & "')"
 
