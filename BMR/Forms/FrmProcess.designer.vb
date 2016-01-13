@@ -48,6 +48,7 @@ Partial Class FrmProcess
         Me.btnsave = New C1.Win.C1Input.C1Button
         Me.C1SuperErrorProvider1 = New C1.Win.C1SuperTooltip.C1SuperErrorProvider(Me.components)
         Me.C1SuperTooltip1 = New C1.Win.C1SuperTooltip.C1SuperTooltip(Me.components)
+        Me.txtscrapscan = New System.Windows.Forms.TextBox
         CType(Me.C1ThemeController1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.btnClose, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.btnClear, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -87,6 +88,7 @@ Partial Class FrmProcess
         'GroupBox1
         '
         Me.GroupBox1.BackColor = System.Drawing.Color.White
+        Me.GroupBox1.Controls.Add(Me.txtscrapscan)
         Me.GroupBox1.Controls.Add(Me.DateTimePicker1)
         Me.GroupBox1.Controls.Add(Me.cboBatchno)
         Me.GroupBox1.Controls.Add(Me.CmbProduct)
@@ -280,9 +282,9 @@ Partial Class FrmProcess
         '
         Me.TxtScrapQty.BackColor = System.Drawing.Color.White
         Me.TxtScrapQty.ForeColor = System.Drawing.Color.FromArgb(CType(CType(68, Byte), Integer), CType(CType(68, Byte), Integer), CType(CType(68, Byte), Integer))
-        Me.TxtScrapQty.Location = New System.Drawing.Point(138, 217)
+        Me.TxtScrapQty.Location = New System.Drawing.Point(247, 217)
         Me.TxtScrapQty.Name = "TxtScrapQty"
-        Me.TxtScrapQty.Size = New System.Drawing.Size(152, 20)
+        Me.TxtScrapQty.Size = New System.Drawing.Size(43, 20)
         Me.TxtScrapQty.TabIndex = 6
         Me.C1ThemeController1.SetTheme(Me.TxtScrapQty, "(default)")
         '
@@ -333,6 +335,16 @@ Partial Class FrmProcess
         Me.C1SuperTooltip1.Font = New System.Drawing.Font("Tahoma", 8.0!)
         Me.C1ThemeController1.SetTheme(Me.C1SuperTooltip1, "(default)")
         '
+        'txtscrapscan
+        '
+        Me.txtscrapscan.BackColor = System.Drawing.Color.White
+        Me.txtscrapscan.ForeColor = System.Drawing.Color.FromArgb(CType(CType(68, Byte), Integer), CType(CType(68, Byte), Integer), CType(CType(68, Byte), Integer))
+        Me.txtscrapscan.Location = New System.Drawing.Point(138, 217)
+        Me.txtscrapscan.Name = "txtscrapscan"
+        Me.txtscrapscan.Size = New System.Drawing.Size(103, 20)
+        Me.txtscrapscan.TabIndex = 22
+        Me.C1ThemeController1.SetTheme(Me.txtscrapscan, "(default)")
+        '
         'FrmProcess
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -381,4 +393,5 @@ Partial Class FrmProcess
     Friend WithEvents CmbProduct As System.Windows.Forms.ComboBox
     Friend WithEvents cboBatchno As System.Windows.Forms.ComboBox
     Friend WithEvents DateTimePicker1 As System.Windows.Forms.DateTimePicker
+    Friend WithEvents txtscrapscan As System.Windows.Forms.TextBox
 End Class
