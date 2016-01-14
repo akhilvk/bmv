@@ -178,6 +178,7 @@
         If validate() Then
             Try
                 Dim a As Int16 = 0
+                Dim b As String = ""
                 Dim datetim As DateTime = DateTime.Now
                 'FrmMain._LocPrefix = "K"
                 Loc_Prefix = FrmMain._LocPrefix
@@ -213,8 +214,8 @@
                         AddToDt(objCreator, a)
 
                         a = a + 1
-
-                        Dim QRY1 As String = "INSERT INTO Tbl_FinalPack_Sub (packet_Serial_no,carton_Serial_no,Status) VALUES('" + packet_Serial_no + "','',0)"
+                        b = FullBatch & Format(a, "#000")
+                        Dim QRY1 As String = "INSERT INTO Tbl_FinalPack_Sub (packet_Serial_no,carton_Serial_no,Status,Batch_No) VALUES('" + packet_Serial_no + "','',0,'" + b + "')"
                         If SaveToDb(QRY1) Then
                             QRY1 = QRY1.Replace("'", "|")
                             'SaveToDb("INSERT INTO dbo.Sync_Master (Sync_Date,Sync_Query,Location_Code,Status) VALUES('" + datetim + "','" + QRY1 + "'," & Loc_Code & ",0)")
