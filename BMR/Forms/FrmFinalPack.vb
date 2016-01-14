@@ -18,6 +18,7 @@
         Public next_Barcode As String
         Public status As Integer
         Public FullBatch_no As String
+        Public FBatch_no As String
     End Class
     Private Sub FrmWIPPrinting_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         Clear()
@@ -155,6 +156,7 @@
             dtprint.Columns.Add("packet_size")
             dtprint.Columns.Add("Carton_Weight")
             dtprint.Columns.Add("Full_Batch")
+            dtprint.Columns.Add("F_Batch")
         End If
         dtprint.Rows.Add()
         dtprint.Rows(introw).Item(0) = objcreator.Carton_Serial_no
@@ -171,6 +173,7 @@
         dtprint.Rows(introw).Item(11) = objcreator.packet_size
         dtprint.Rows(introw).Item(12) = objcreator.Carton_Weight
         dtprint.Rows(introw).Item(13) = objcreator.FullBatch_no
+        dtprint.Rows(introw).Item(14) = objcreator.FBatch_no
     End Function
 
     Private Sub btnsave_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnsave.Click
@@ -213,11 +216,11 @@
                         objCreator.packet_size = TxtPack.Text
                         objCreator.Carton_Weight = txtWeight.Text
                         objCreator.FullBatch_no = FullBatch 'txtBatch.Text + SortId + Loc_Prefix
+                        b = FullBatch & Format(a, "#0000")
+                        objCreator.FBatch_no = b
                         AddToDt(objCreator, a)
 
                         a = a + 1
-
-                        b = FullBatch & Format(a, "#0000")
 
                         Dim QRY1 As String = "INSERT INTO Tbl_FinalPack_Sub (packet_Serial_no,carton_Serial_no,Status,Batch_No) VALUES('" + packet_Serial_no + "','',0,'" + b + "')"
                         If SaveToDb(QRY1) Then

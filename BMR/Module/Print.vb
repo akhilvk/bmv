@@ -27,7 +27,7 @@ Module Print
                     DPL1 = DPL1.Replace("[barcode]", dt.Rows(j)("Packet_Serial_no"))
                     DPL1 = DPL1.Replace("[barcode1]", dt.Rows(j)("Packet_Serial_no"))
                     DPL1 = DPL1.Replace("[name]", dt.Rows(j)("Product"))
-                    DPL1 = DPL1.Replace("[name1]", dt.Rows(j)("Batch_No") & "    wt:" & dt.Rows(j)("Carton_Weight"))
+                    DPL1 = DPL1.Replace("[name1]", dt.Rows(j)("F_Batch") & "    wt:" & dt.Rows(j)("Carton_Weight"))
 
                     RawPrinterHelper.SendStringToPrinter(DefaultPrinterName(), DPL1)
                 Next
