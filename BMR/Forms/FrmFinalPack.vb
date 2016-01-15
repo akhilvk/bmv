@@ -55,6 +55,7 @@
         TxtQty.Text = ""
         txtWeight.Text = ""
         CmbProduct.Text = ""
+        txtCount.Text = ""
         Try
             If dtprint.Rows.Count > 0 Then
                 dtprint.Rows.Clear()
@@ -290,7 +291,7 @@
 
     Private Sub TxtQty_KeyDown(ByVal sender As System.Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles TxtQty.KeyDown
         If e.KeyCode = Keys.Enter Then
-            btnsave_Click(sender, e)
+            SendKeys.Send("{tab}")
         End If
     End Sub
 
@@ -318,6 +319,12 @@
                     Exit Sub
                 End If
             End If
+        End If
+    End Sub
+
+    Private Sub txtCount_KeyDown(ByVal sender As System.Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles txtCount.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            btnsave_Click(sender, e)
         End If
     End Sub
 End Class

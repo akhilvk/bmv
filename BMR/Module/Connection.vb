@@ -369,47 +369,55 @@ Long, ByVal lpColorValues As Long) As Long
         End If
     End Function
     Public Function ReturningDataBySp(ByVal FromDate As DateTime, ByVal ToDate As DateTime, ByVal Flag As Integer, ByVal PType As String, ByVal ProCode As String) As DataTable
-        Dim cmd As New MySqlCommand("Sp_Report", Sql_Connection)
-        AssignConnection(cmd)
-        If Sql_Connection.State = ConnectionState.Closed Then
-            If ConnectToDB() = False Then
-                WarningMessage("Connection To DB Failed")
-                End
+        Try
+            Dim cmd As New MySqlCommand("Sp_Report", Sql_Connection)
+            AssignConnection(cmd)
+            If Sql_Connection.State = ConnectionState.Closed Then
+                If ConnectToDB() = False Then
+                    WarningMessage("Connection To DB Failed")
+                    End
+                End If
             End If
-        End If
-        cmd.CommandType = CommandType.StoredProcedure
-        cmd.Connection = Sql_Connection
-        cmd.Parameters.Clear()
-        cmd.Parameters.Add("@Flag", SqlDbType.BigInt).Value = Flag
-        If Flag = 1 Then
-        Else
-            cmd.Parameters.Add("@FromDate", SqlDbType.DateTime).Value = FromDate
-            cmd.Parameters.Add("@ToDate", SqlDbType.DateTime).Value = ToDate
-        End If
-        cmd.Parameters.Add("@PType", SqlDbType.VarChar).Value = PType
-        cmd.Parameters.Add("@ProductCode", SqlDbType.VarChar).Value = ProCode
-        Dim adp As New MySqlDataAdapter(cmd)
-        Dim dt As New DataTable()
-        adp.Fill(dt)
-        Return dt
+            cmd.CommandType = CommandType.StoredProcedure
+            cmd.Connection = Sql_Connection
+            cmd.Parameters.Clear()
+            cmd.Parameters.Add("@Flag", SqlDbType.BigInt).Value = Flag
+            If Flag = 1 Then
+            Else
+                cmd.Parameters.Add("@FromDate", SqlDbType.DateTime).Value = FromDate
+                cmd.Parameters.Add("@ToDate", SqlDbType.DateTime).Value = ToDate
+            End If
+            cmd.Parameters.Add("@PType", SqlDbType.VarChar).Value = PType
+            cmd.Parameters.Add("@ProductCode", SqlDbType.VarChar).Value = ProCode
+            Dim adp As New MySqlDataAdapter(cmd)
+            Dim dt As New DataTable()
+            adp.Fill(dt)
+            Return dt
+        Catch ex As Exception
+
+        End Try
     End Function
     Public Function ReturningDataByQ(ByVal query As String) As DataTable
-        Dim cmd As New MySqlCommand
-        If Sql_Connection.State = ConnectionState.Closed Then
-            If ConnectToDB() = False Then
-                WarningMessage("Connection To DB Failed")
-                End
+        Try
+            Dim cmd As New MySqlCommand
+            If Sql_Connection.State = ConnectionState.Closed Then
+                If ConnectToDB() = False Then
+                    WarningMessage("Connection To DB Failed")
+                    End
+                End If
             End If
-        End If
-        cmd.CommandText = query
-        AssignConnection(cmd)
-        If Not MyTran Is Nothing Then
-            cmd.Transaction = MyTran
-        End If
-        Dim adp As New MySqlDataAdapter(cmd)
-        Dim dt As New DataTable()
-        adp.Fill(dt)
-        Return dt
+            cmd.CommandText = query
+            AssignConnection(cmd)
+            If Not MyTran Is Nothing Then
+                cmd.Transaction = MyTran
+            End If
+            Dim adp As New MySqlDataAdapter(cmd)
+            Dim dt As New DataTable()
+            adp.Fill(dt)
+            Return dt
+        Catch ex As Exception
+
+        End Try
     End Function
     Public Sub synctable(ByVal query As String)
         query = query.Replace("'", "|")
