@@ -188,7 +188,7 @@
                 'FrmMain._LocPrefix = "K"
                 Loc_Prefix = FrmMain._LocPrefix
                 FullBatch = ExBatch + Loc_Prefix
-                For intcount1 = 0 To Val(txtCount.Text) - 1
+                For intcount1 = 0 To Val(TxtQty.Text) - 1
                     Dim dt As DataTable = ReturningDataByQ("SELECT COUNT(Carton_Serial_no)+10000001 No FROM BARCODE WHERE Loc_Code=" & Loc_Code & "")
                     Carton_Serial_no = "F" + Loc_Prefix + dt.Rows(0)(0).ToString()
 
@@ -199,7 +199,7 @@
                         'SaveToDb("INSERT INTO dbo.Sync_Master (Sync_Date,Sync_Query,Location_Code,Status) VALUES('" + datetim + "','" + QRY + "'," & Loc_Code & ",0)")
                     End If
 
-                    For intcount = 0 To Val(TxtQty.Text) - 1
+                    For intcount = 0 To Val(txtCount.Text) - 1
                         Dim dt1 As DataTable = ReturningDataByQ("SELECT COUNT(packet_Serial_no)+10000001 No FROM Tbl_FinalPack_Sub")
                         packet_Serial_no = "P" + Loc_Prefix + dt1.Rows(0)(0).ToString()
 
@@ -216,8 +216,6 @@
                         objCreator.packet_size = TxtPack.Text
                         objCreator.Carton_Weight = txtWeight.Text
                         objCreator.FullBatch_no = FullBatch 'txtBatch.Text + SortId + Loc_Prefix
-                       
-
                         a = a + 1
                         b = FullBatch & Format(a, "#0000")
                         objCreator.FBatch_no = b
@@ -228,8 +226,8 @@
                             QRY1 = QRY1.Replace("'", "|")
                             'SaveToDb("INSERT INTO dbo.Sync_Master (Sync_Date,Sync_Query,Location_Code,Status) VALUES('" + datetim + "','" + QRY1 + "'," & Loc_Code & ",0)")
                         End If
-                        If intcount = Val(TxtQty.Text) - 1 Then
-                            If intcount1 = Val(txtCount.Text) - 1 Then
+                        If intcount1 = Val(TxtQty.Text) - 1 Then
+                            If intcount = Val(txtCount.Text) - 1 Then
                                 If MsgBox("Do You Want to Print Barcodes", MsgBoxStyle.YesNo, "BMR") = MsgBoxResult.Yes Then
                                     PrintWip(dtprint, "Final")
                                     Clear()
@@ -307,7 +305,6 @@
 
         End Try
     End Sub
-
     Private Sub txtBatch_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles txtBatch.Leave
         ErrorProvider1.Dispose()
         If txtBatch.Text.Trim() <> "" Then
