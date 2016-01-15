@@ -58,6 +58,7 @@
         TxtQty.Text = ""
         txtWeight.Text = ""
         CmbProduct.Text = ""
+        CmbProduct.Focus()
         Try
             If dtprint.Rows.Count > 0 Then
                 dtprint.Rows.Clear()
