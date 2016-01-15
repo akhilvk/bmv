@@ -182,6 +182,7 @@
         Dim objCreator As New barcode
         If validate() Then
             Try
+                
                 Dim a As Int16 = 0
                 Dim b As String
                 Dim introw As Integer
@@ -248,14 +249,17 @@
     End Sub
 
     Private Sub CmbProduct_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CmbProduct.SelectedIndexChanged
-        If CmbProduct.Text <> "" Then
-            Dr = SelectQuery("select SAP_Code from Product_Master where Product_Code=" & CType(CmbProduct.SelectedItem, itemdata).Value & "")
-            If Dr.Read Then
-                txtSap.Text = Dr("SAP_Code")
-                txtSap.Focus()
+        Try
+            If CmbProduct.Text <> "" Then
+                Dr = SelectQuery("select SAP_Code from Product_Master where Product_Code=" & CType(CmbProduct.SelectedItem, itemdata).Value & "")
+                If Dr.Read Then
+                    txtSap.Text = Dr("SAP_Code")
+                    txtSap.Focus()
+                    Dr.Close()
+                End If
             End If
-            Dr.Close()
-        End If
+        Catch ex As Exception
+        End Try
     End Sub
 
     Private Sub txtSap_KeyDown(ByVal sender As System.Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles txtSap.KeyDown
@@ -279,8 +283,9 @@
 
                 End Try
                 SendKeys.Send("{tab}")
+                Dr.Close()
             End If
-            Dr.Close()
+
         End If
     End Sub
 
@@ -304,23 +309,27 @@
                 SortId = dt.Rows(0)(0)
             End If
         Catch ex As Exception
-
+            CmbSort.Text = ""
         End Try
     End Sub
     Private Sub txtBatch_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles txtBatch.Leave
         ErrorProvider1.Dispose()
-        If txtBatch.Text.Trim() <> "" Then
-            Dim dtFBatch As DataTable = ReturningDataByQ("SELECT DISTINCT FullBatch  FROM Barcode WHERE Product_type ='W' AND Batch_no ='" + txtBatch.Text + "'")
-            If dtFBatch.Rows.Count > 0 Then
-                ExBatch = dtFBatch.Rows(0)(0)
-            Else
-                If ExBatch = "" Then
-                    ErrorProvider1.SetError(txtBatch, "Please Enter Valid Batch No")
-                    txtBatch.Focus()
-                    Exit Sub
+        Try
+            If txtBatch.Text.Trim() <> "" Then
+                Dim dtFBatch As DataTable = ReturningDataByQ("SELECT DISTINCT FullBatch  FROM Barcode WHERE Product_type ='W' AND Batch_no ='" + txtBatch.Text + "'")
+                If dtFBatch.Rows.Count > 0 Then
+                    ExBatch = dtFBatch.Rows(0)(0)
+                Else
+                    If ExBatch = "" Then
+                        ErrorProvider1.SetError(txtBatch, "Please Enter Valid Batch No")
+                        txtBatch.Focus()
+                        Exit Sub
+                    End If
                 End If
             End If
-        End If
+        Catch ex As Exception
+            txtBatch.Text = ""
+        End Try
     End Sub
 
     Private Sub txtCount_KeyDown(ByVal sender As System.Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles txtCount.KeyDown

@@ -60,8 +60,8 @@
                 Catch ex As Exception
 
                 End Try
+                Dr.Close()
             End If
-            Dr.Close()
             txtbatch_no.Focus()
         End If
     End Sub
@@ -221,17 +221,21 @@
 
     Private Sub txtbatch_no_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles txtbatch_no.Leave
         ErrorProvider1.Dispose()
-        If txtbatch_no.Text.Trim() <> "" Then
-            Dim dtFBatch As DataTable = ReturningDataByQ("SELECT DISTINCT Batch_nO  FROM Barcode WHERE Product_type ='W' AND Batch_no ='" + txtbatch_no.Text + "'")
-            If dtFBatch.Rows.Count > 0 Then
-                ExBatch = dtFBatch.Rows(0)(0)
-            Else
-                If ExBatch = "" Then
-                    ErrorProvider1.SetError(txtbatch_no, "Please Enter Valid Batch No")
-                    txtbatch_no.Focus()
-                    Exit Sub
+        Try
+            If txtbatch_no.Text.Trim() <> "" Then
+                Dim dtFBatch As DataTable = ReturningDataByQ("SELECT DISTINCT Batch_nO  FROM Barcode WHERE Product_type ='W' AND Batch_no ='" + txtbatch_no.Text + "'")
+                If dtFBatch.Rows.Count > 0 Then
+                    ExBatch = dtFBatch.Rows(0)(0)
+                Else
+                    If ExBatch = "" Then
+                        ErrorProvider1.SetError(txtbatch_no, "Please Enter Valid Batch No")
+                        txtbatch_no.Focus()
+                        Exit Sub
+                    End If
                 End If
             End If
-        End If
+        Catch ex As Exception
+            txtbatch_no.Text = ""
+        End Try
     End Sub
 End Class

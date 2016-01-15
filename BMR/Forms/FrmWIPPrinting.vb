@@ -252,12 +252,13 @@
                         seterr(txtSap, "The Product is not a WIP Type")
                         txtSap.Focus()
                     End If
+                    Dr.Close()
                 Catch ex As Exception
 
                 End Try
                 SendKeys.Send("{tab}")
             End If
-            Dr.Close()
+
         End If
     End Sub
 
@@ -287,17 +288,23 @@
 
     Private Sub txtBatch_Leave(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles txtBatch.Leave
         ErrorProvider1.Dispose()
-        If txtBatch.Text.Trim() <> "" Then
-            Dim dtFBatch As DataTable = ReturningDataByQ("SELECT DISTINCT FullBatch  FROM Barcode WHERE Product_type ='SFG' AND Batch_no ='" + txtBatch.Text + "'")
-            If dtFBatch.Rows.Count > 0 Then
-                ExBatch = dtFBatch.Rows(0)(0)
-            Else
-                If ExBatch = "" Then
-                    ErrorProvider1.SetError(txtBatch, "Please Enter Valid Batch No")
-                    txtBatch.Focus()
-                    Exit Sub
+        Try
+
+            If txtBatch.Text.Trim() <> "" Then
+                Dim dtFBatch As DataTable = ReturningDataByQ("SELECT DISTINCT FullBatch  FROM Barcode WHERE Product_type ='SFG' AND Batch_no ='" + txtBatch.Text + "'")
+                If dtFBatch.Rows.Count > 0 Then
+                    ExBatch = dtFBatch.Rows(0)(0)
+                Else
+                    If ExBatch = "" Then
+                        ErrorProvider1.SetError(txtBatch, "Please Enter Valid Batch No")
+                        txtBatch.Focus()
+                        Exit Sub
+                    End If
                 End If
             End If
-        End If
+
+        Catch ex As Exception
+            txtBatch.Text = ""
+        End Try
     End Sub
 End Class

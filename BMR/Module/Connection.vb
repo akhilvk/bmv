@@ -424,19 +424,23 @@ Long, ByVal lpColorValues As Long) As Long
         ExecuteQuery("insert into Sync_Master(Sync_Date,Sync_Query,Location_Code,Status) values(getdate(),'" & query & "'," & Loc_Code & ",0)")
     End Sub
     Public Function SelectQuery(ByVal Query As String) As MySqlDataReader
-        Dim SQLCmd As New MySqlCommand
-        If Sql_Connection.State = ConnectionState.Closed Then
-            If ConnectToDB() = False Then
-                WarningMessage("Connection To DB Failed")
-                End
+        Try
+            Dim SQLCmd As New MySqlCommand
+            If Sql_Connection.State = ConnectionState.Closed Then
+                If ConnectToDB() = False Then
+                    WarningMessage("Connection To DB Failed")
+                    End
+                End If
             End If
-        End If
-        AssignConnection(SQLCmd)
-        SQLCmd.CommandText = Query
-        Dim TmpDr As MySqlDataReader
-        TmpDr = SQLCmd.ExecuteReader
-        SQLCmd.Dispose()
-        Return TmpDr
+            AssignConnection(SQLCmd)
+            SQLCmd.CommandText = Query
+            Dim TmpDr As MySqlDataReader
+            TmpDr = SQLCmd.ExecuteReader
+            SQLCmd.Dispose()
+            Return TmpDr
+        Catch ex As Exception
+
+        End Try
     End Function
     Public Function SelectQueryScalar(ByVal Query As String) As Object
         Dim SQLCmd As New MySqlCommand

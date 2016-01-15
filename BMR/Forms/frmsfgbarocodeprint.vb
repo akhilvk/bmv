@@ -47,9 +47,10 @@
                 Exit Sub
             End If
             Dim a As String
-            Dr = SelectQuery("select Product_Name,Product_type from Product_Master where SAP_Code='" & txtsap_code.Text.Trim & "'")
-            If Dr.Read Then
-                Try
+            Try
+                Dr = SelectQuery("select Product_Name,Product_type from Product_Master where SAP_Code='" & txtsap_code.Text.Trim & "'")
+                If Dr.Read Then
+
                     cmbproduct.Text = Dr("Product_Name")
                     a = Dr("Product_type")
                     If a <> "SFG" Then
@@ -57,11 +58,12 @@
                         ErrorProvider1.SetError(txtsap_code, "The Product is not a SFG Type")
                         txtsap_code.Focus()
                     End If
-                Catch ex As Exception
+                    Dr.Close()
+                End If
+            Catch ex As Exception
+                txtsap_code.Text = ""
+            End Try
 
-                End Try
-            End If
-            Dr.Close()
             txtbatch_no.Focus()
         End If
     End Sub
@@ -216,6 +218,7 @@
                 SortId = dt.Rows(0)(0)
             End If
         Catch ex As Exception
+            cmbsorttype.Text = ""
         End Try
     End Sub
 End Class
