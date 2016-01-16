@@ -195,7 +195,7 @@
                 ReadAllText = ReadAllText.Replace("[barcode]", Serial_no)
                 ReadAllText = ReadAllText.Replace("[barcode1]", Serial_no)
                 ReadAllText = ReadAllText.Replace("[name]", CType(cmbproduct.SelectedItem, itemdata).Description)
-                ReadAllText = ReadAllText.Replace("[name1]", txtbatch_no.Text)
+                ReadAllText = ReadAllText.Replace("[name1]", txtbatch_no.Text & "    wt:" & txtcarton_weight.Text)
                 StringBuilder &= ReadAllText & vbCrLf
             Next
             CommitTransaction()
