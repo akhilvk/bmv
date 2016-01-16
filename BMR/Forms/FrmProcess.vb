@@ -5,6 +5,7 @@ Imports MySql.Data.MySqlClient
 Public Class FrmProcess
     Dim Sql_Connection As New MySqlConnection
     Dim listscrap As New List(Of String)
+    Dim strScrapcode As String
     Private Sub FrmProcess_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         clear()
     End Sub
@@ -128,6 +129,7 @@ Public Class FrmProcess
         TxtProcessQty.Clear()
         DateTimePicker1.Value = Date.Today
         txtSap.Text = ""
+        strScrapcode = ""
         txtscanQty.Text = ""
         TxtScrapQty.Text = ""
         txtWaste.Text = ""
@@ -151,10 +153,15 @@ Public Class FrmProcess
                 txtSap.Focus()
             End If
             Dr.Close()
+            Dr = SelectQuery("select SAP_Code from Product_Master A inner join Scrap_prod_link B on A.Product_code=B.Scrap_code where B.Product_Code=" & CType(CmbProduct.SelectedItem, itemdata).Value & "")
+            If Dr.Read Then
+                strScrapcode = Dr(0).ToString
+            End If
+            Dr.Close()
             If Me.Tag = 0 Then
-                LoadCombo(cboBatchno, "select distinct(batch_no) from barcode where Product_type='SFG' and Product_Code=" & CType(CmbProduct.SelectedItem, itemdata).Value & " and status=1")
+                LoadCombo(cboBatchno, "select distinct(batch_no) from barcode where Product_type='SFG' and Product_Code=" & CType(CmbProduct.SelectedItem, itemdata).Value & " and status=1 and loc_code='" & Loc_Code & "' and batch_no not in(select batch_no from tbl_inventory where Sapcode='" & txtSap.Text & "'  and type=0 and loc_code='" & Loc_Code & "')")
             Else
-                LoadCombo(cboBatchno, "select distinct(batch_no) from barcode where Product_type='W' and Product_Code=" & CType(CmbProduct.SelectedItem, itemdata).Value & " and status=1")
+                LoadCombo(cboBatchno, "select distinct(batch_no) from barcode where Product_type='W' and Product_Code=" & CType(CmbProduct.SelectedItem, itemdata).Value & " and status=1 and loc_code=" & Loc_Code & " and batch_no not in(select batch_no from tbl_inventory where Sapcode='" & txtSap.Text & "' and date='" & Format(DateTimePicker1.Value, "yyyy-MM-dd") & "' and type=1 and loc_code='" & Loc_Code & "')")
             End If
         End If
     End Sub
@@ -324,7 +331,7 @@ Public Class FrmProcess
                     End If
                     Dr.Close()
                     cmd.Parameters.Clear()
-                    cmd.CommandText = "select sum(B.carton_weight) from tbl_scrapstorage A inner join barcode B on A.carton_serial_no=B.carton_serial_no inner join product_master C on c.product_code=A.Product_code inner join scrap_prod_link D on A.Product_code=D.scrap_code  where D.product_code=?prod and A.batch_no=?bno and A.store_date=?date and loc_code=?loc"
+                    cmd.CommandText = "select sum(B.carton_weight) from tbl_scrapstorage A inner join barcode B on A.carton_serial_no=B.carton_serial_no inner join product_master C on c.product_code=A.Product_code inner join scrap_prod_link D on A.Product_code=D.scrap_code  where D.product_code=?prod and A.batch_no=?bno and A.store_date=?date and A.loc_code=?loc"
                     AssignConnection(cmd)
                     With cmd
                         .Parameters.AddWithValue("?bno", cboBatchno.Text)
@@ -449,6 +456,21 @@ Public Class FrmProcess
             '    MsgBox("Processed quantity is Equal to Scanned qauntity.Cannot Enter Any more ", MsgBoxStyle.OkOnly, "BMR")
             '    Return True
             'End If
+            cmd = New MySqlCommand("Select * from tbl_Inventory where batch_no=?bno and date=?date and type=?type  and Scrap_code=?sap")
+            AssignConnection(cmd)
+            With cmd
+                .Parameters.Add("?bno", cboBatchno.Text)
+                .Parameters.Add("?sap", strScrapcode)
+                .Parameters.Add("?date", Format(DateTimePicker1.Value, "yyyy-MM-dd"))
+                .Parameters.Add("?type", Me.Tag)
+            End With
+            Dr = cmd.ExecuteReader
+            If Dr.HasRows Then
+                MsgBox("Scrap quantity For this Item Already Exist", MsgBoxStyle.OkOnly, "BMR")
+                TxtScrapQty.Text = "0"
+                TxtProcessQty.Text = Val(txtscanQty.Text) + Val(TxtScrapQty.Text) + Val(txtWaste.Text)
+            End If
+            Dr.Close()
             cmd = New MySqlCommand("Select * from tbl_Inventory where batch_no=?bno and date=?date and type=?type  and SAPcode=?sap")
             AssignConnection(cmd)
             With cmd
@@ -478,7 +500,7 @@ Public Class FrmProcess
         If validateme() = True And checkdupl() = False Then
             If MsgBox("Do you want to Save?", MsgBoxStyle.YesNo, "BMR") = MsgBoxResult.Yes Then
                 Try
-                    cmd = New MySqlCommand("Insert into tbl_Inventory values(?bno,?sap,?prod,?date,?pqty,?scanqty,?scrap,?wqty,?type,?loc)")
+                    cmd = New MySqlCommand("Insert into tbl_Inventory values(?bno,?sap,?prod,?date,?pqty,?scanqty,?scrap,?wqty,?type,?loc,?Scrapcode)")
                     AssignConnection(cmd)
                     With cmd
                         .Parameters.AddWithValue("?bno", cboBatchno.Text)
@@ -492,6 +514,7 @@ Public Class FrmProcess
                         .Parameters.AddWithValue("?wqty", txtWaste.Text)
                         .Parameters.AddWithValue("?type", Me.Tag)
                         .Parameters.AddWithValue("?loc", Loc_Code)
+                        .Parameters.AddWithValue("?Scrapcode", strScrapcode)
                     End With
                     cmd.ExecuteNonQuery()
                     clear()
