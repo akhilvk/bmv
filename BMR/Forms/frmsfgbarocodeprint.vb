@@ -41,7 +41,13 @@
     End Sub
 
     Private Sub txtsap_code_KeyDown(ByVal sender As System.Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles txtsap_code.KeyDown
+        Dim strprod As String
         If e.KeyCode = Keys.Enter Then
+            If cmbproduct.Text <> "" Then
+                If MsgBox("You have Already Selected a Product? do you want to Replace it?", MsgBoxStyle.YesNo, "BMR") = MsgBoxResult.No Then
+                    Exit Sub
+                End If
+            End If
             If txtsap_code.Text = "" Then
                 MsgBox("Please Enter SAP Code")
                 Exit Sub
@@ -50,8 +56,7 @@
             Try
                 Dr = SelectQuery("select Product_Name,Product_type from Product_Master where SAP_Code='" & txtsap_code.Text.Trim & "'")
                 If Dr.Read Then
-
-                    cmbproduct.Text = Dr("Product_Name")
+                    strprod = Dr("Product_Name")
                     a = Dr("Product_type")
                     If a <> "SFG" Then
                         cmbproduct.Text = ""
@@ -60,10 +65,12 @@
                     End If
                     Dr.Close()
                 End If
+                cmbproduct.Text = strprod
             Catch ex As Exception
                 txtsap_code.Text = ""
+                'Dr.Close()
             End Try
-
+            Dr.Close()
             txtbatch_no.Focus()
         End If
     End Sub
@@ -71,7 +78,7 @@
     Private Sub cmbproduct_KeyDown(ByVal sender As System.Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles cmbproduct.KeyDown
         If e.KeyCode = Keys.Enter Then
             If cmbproduct.Text <> "" Then
-                txtsap_code.Focus()
+                txtbatch_no.Focus()
             End If
         End If
     End Sub

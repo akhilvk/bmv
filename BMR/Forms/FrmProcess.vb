@@ -129,7 +129,6 @@ Public Class FrmProcess
         DateTimePicker1.Value = Date.Today
         txtSap.Text = ""
         txtscanQty.Text = ""
-        txtscrapscan.Text = ""
         TxtScrapQty.Text = ""
         txtWaste.Text = ""
         CmbProduct.SelectedValue = 0
@@ -201,7 +200,7 @@ Public Class FrmProcess
             End If
         End If
     End Sub
-    Private Sub CmbShift_KeyDown(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles txtscanQty.KeyDown, txtWaste.KeyDown
+    Private Sub CmbShift_KeyDown(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles txtscanQty.KeyDown
         If e.KeyCode = Keys.Enter Then
             ProcessTabKey(True)
         ElseIf e.KeyCode = Keys.Left Then
@@ -221,12 +220,12 @@ Public Class FrmProcess
             If CmbProduct.SelectedIndex <> -1 Then
                 If Me.Tag = 0 Then
                     Dim cmd As New MySqlCommand
-                    cmd.CommandText = "select  sum(Carton_Weight) from Barcode where Batch_no=?bno and Product_type='SFG' and status=1 and loc_code=?loc and product_code=?prod and store_date=?date"
+                    cmd.CommandText = "select  sum(Carton_Weight) from Barcode where Batch_no=?bno and Product_type='SFG' and status=1 and loc_code=?loc and sap_code=?prod and store_date=?date"
                     AssignConnection(cmd)
                     With cmd
                         .Parameters.AddWithValue("?bno", cboBatchno.Text)
                         .Parameters.AddWithValue("?loc", Loc_Code)
-                        .Parameters.AddWithValue("?prod", CType(CmbProduct.SelectedItem, itemdata).Value)
+                        .Parameters.AddWithValue("?prod", txtSap.Text)
                         .Parameters.AddWithValue("?date", Format(DateTimePicker1.Value, "yyyy-MM-dd"))
                     End With
                     Dr = cmd.ExecuteReader
@@ -236,7 +235,9 @@ Public Class FrmProcess
                             C1SuperErrorProvider1.SetError(TxtProcessQty, "Process quantity Entered Less than Actual Process Qty..Actual Qty : " & Dr(0).ToString & "")
                             C1SuperTooltip1.SetToolTip(TxtProcessQty, "Enter Correct Process Qty")
                             C1SuperTooltip1.IsBalloon = True
-                            TxtProcessQty.Focus()
+                            txtscanQty.Text = Val(Dr(0).ToString)
+                            'TxtScrapQty.Focus()
+                            'txtscrapscan.Focus()
                         ElseIf Val(Dr(0).ToString) = 0 Then
                             C1SuperErrorProvider1.SetError(TxtProcessQty, "Cant Find Process Qty for this Batch")
                             C1SuperTooltip1.SetToolTip(TxtProcessQty, "Enter Correct Process Qty")
@@ -247,18 +248,43 @@ Public Class FrmProcess
                             C1SuperTooltip1.RemoveAll()
                             C1SuperTooltip1.Hide()
                             txtscanQty.Text = Val(Dr(0).ToString)
-                            txtscrapscan.Focus()
+                            'txtscrapscan.Focus()
+                            'TxtScrapQty.Focus()
                         End If
                     End While
                     Dr.Close()
+                    cmd.Parameters.Clear()
+                    cmd.CommandText = "select sum(B.carton_weight) from tbl_scrapstorage A inner join barcode B on A.carton_serial_no=B.carton_serial_no inner join product_master C on c.product_code=A.Product_code inner join scrap_prod_link D on A.Product_code=D.scrap_code  where D.product_code=?prod and A.batch_no=?bno and A.store_date=?date and A.loc_code=?loc"
+                    AssignConnection(cmd)
+                    With cmd
+                        .Parameters.AddWithValue("?bno", cboBatchno.Text)
+                        .Parameters.AddWithValue("?loc", Loc_Code)
+                        .Parameters.AddWithValue("?prod", CType(CmbProduct.SelectedItem, itemdata).Value)
+                        .Parameters.AddWithValue("?date", Format(DateTimePicker1.Value, "yyyy-MM-dd"))
+                    End With
+                    Dr = cmd.ExecuteReader
+                    If Dr.HasRows Then
+                        C1SuperErrorProvider1.Clear()
+                        C1SuperTooltip1.RemoveAll()
+                        C1SuperTooltip1.Hide()
+                        While Dr.Read
+                            TxtScrapQty.Text = Dr(0).ToString
+                        End While
+                        Dr.Close()
+                    Else
+                        C1SuperErrorProvider1.SetError(TxtScrapQty, "Cant Find Scrap Qty for this Batch")
+                        C1SuperTooltip1.SetToolTip(TxtProcessQty, "No Scrap Qty")
+                        C1SuperTooltip1.IsBalloon = True
+                    End If
+                    txtWaste.Focus()
                 Else
-                    Dim cmd As New MySqlCommand("select  SUM(Carton_Weight) from Barcode where Batch_no=?batchno and Product_type='W' and status=1 and loc_code=?loc  and product_code=?prod and STR_TO_DATE(store_date, '%Y-%m-%d') = convert(?date,char)")
+                    Dim cmd As New MySqlCommand("select  SUM(Carton_Weight) from Barcode where Batch_no=?batchno and Product_type='W' and status=1 and loc_code=?loc  and sap_code=?prod and STR_TO_DATE(store_date, '%Y-%m-%d') = convert(?date,char)")
                     AssignConnection(cmd)
                     With cmd
                         .Parameters.AddWithValue("?batchno", cboBatchno.Text)
                         .Parameters.AddWithValue("?loc", Loc_Code)
                         .Parameters.AddWithValue("?date", Format(DateTimePicker1.Value, "yyyy-MM-dd"))
-                        .Parameters.AddWithValue("?prod", CType(CmbProduct.SelectedItem, itemdata).Value)
+                        .Parameters.AddWithValue("?prod", txtSap.Text)
                     End With
                     Dim i As Integer
                     i = Val(cmd.ExecuteScalar.ToString)
@@ -281,7 +307,9 @@ Public Class FrmProcess
                         C1SuperErrorProvider1.SetError(TxtProcessQty, "Process quantity Entered Less than Actual Process Qty..Actual Qty : " & i.ToString & "")
                         C1SuperTooltip1.SetToolTip(TxtProcessQty, "Enter Correct Process Qty")
                         C1SuperTooltip1.IsBalloon = True
-                        TxtProcessQty.Focus()
+                        txtscanQty.Text = Val(i.ToString)
+                        'txtscrapscan.Focus()
+                        'txtscanQty.Focus()
                     ElseIf Val(i) = 0 Then
                         C1SuperErrorProvider1.SetError(TxtProcessQty, "Cant Find Process Qty for this Batch")
                         C1SuperTooltip1.SetToolTip(TxtProcessQty, "Enter Correct Process Qty")
@@ -292,9 +320,33 @@ Public Class FrmProcess
                         C1SuperTooltip1.RemoveAll()
                         C1SuperTooltip1.Hide()
                         txtscanQty.Text = Val(i.ToString)
-                        txtscrapscan.Focus()
+                        'txtscrapscan.Focus()
                     End If
                     Dr.Close()
+                    cmd.Parameters.Clear()
+                    cmd.CommandText = "select sum(B.carton_weight) from tbl_scrapstorage A inner join barcode B on A.carton_serial_no=B.carton_serial_no inner join product_master C on c.product_code=A.Product_code inner join scrap_prod_link D on A.Product_code=D.scrap_code  where D.product_code=?prod and A.batch_no=?bno and A.store_date=?date and loc_code=?loc"
+                    AssignConnection(cmd)
+                    With cmd
+                        .Parameters.AddWithValue("?bno", cboBatchno.Text)
+                        .Parameters.AddWithValue("?loc", Loc_Code)
+                        .Parameters.AddWithValue("?prod", CType(CmbProduct.SelectedItem, itemdata).Value)
+                        .Parameters.AddWithValue("?date", Format(DateTimePicker1.Value, "yyyy-MM-dd"))
+                    End With
+                    Dr = cmd.ExecuteReader
+                    If Dr.HasRows Then
+                        C1SuperErrorProvider1.Clear()
+                        C1SuperTooltip1.RemoveAll()
+                        C1SuperTooltip1.Hide()
+                        While Dr.Read
+                            TxtScrapQty.Text = Dr(0).ToString
+                        End While
+                        Dr.Close()
+                    Else
+                        C1SuperErrorProvider1.SetError(TxtScrapQty, "Cant Find Scrap Qty for this Batch")
+                        C1SuperTooltip1.SetToolTip(TxtProcessQty, "No Scrap Qty")
+                        C1SuperTooltip1.IsBalloon = True
+                    End If
+                    txtWaste.Focus()
                 End If
             Else
                 MsgBox("Select a Product", MsgBoxStyle.Critical, "BMR")
@@ -370,13 +422,13 @@ Public Class FrmProcess
     Private Function checkdupl() As Boolean
         Dim cmd As New MySqlCommand
         If Me.Tag = 0 Then
-            cmd = New MySqlCommand("Select * from tbl_Inventory where batch_no=?bno and type=?type and loc_code=?loc and product_code=?prod")
+            cmd = New MySqlCommand("Select * from tbl_Inventory where batch_no=?bno and type=?type and loc_code=?loc and SAPcode=?prod")
             AssignConnection(cmd)
             With cmd
                 .Parameters.AddWithValue("?bno", cboBatchno.Text)
                 .Parameters.AddWithValue("?type", Me.Tag)
                 .Parameters.AddWithValue("?loc", Loc_Code)
-                .Parameters.AddWithValue("?prod", CType(CmbProduct.SelectedItem, itemdata).Value)
+                .Parameters.AddWithValue("?prod", txtSap.Text)
             End With
             Dr = cmd.ExecuteReader
             If Dr.HasRows Then
@@ -460,12 +512,12 @@ Public Class FrmProcess
         If e.KeyCode = Keys.Enter Then
             If Me.Tag = 0 Then
                 Dim cmd As New MySqlCommand
-                cmd.CommandText = "select  sum(Carton_Weight) from Barcode where Batch_no=?bno and Product_type='SFG' and status=1 and loc_code=?loc and product_code=?prod and store_date=?date"
+                cmd.CommandText = "select  sum(Carton_Weight) from Barcode where Batch_no=?bno and Product_type='SFG' and status=1 and loc_code=?loc and sap_code=?prod and store_date=?date"
                 AssignConnection(cmd)
                 With cmd
                     .Parameters.AddWithValue("?bno", cboBatchno.Text)
                     .Parameters.AddWithValue("?loc", Loc_Code)
-                    .Parameters.AddWithValue("?prod", CType(CmbProduct.SelectedItem, itemdata).Value)
+                    .Parameters.AddWithValue("?prod", txtSap.Text)
                     .Parameters.AddWithValue("?date", Format(DateTimePicker1.Value, "yyyy-MM-dd"))
                 End With
                 Dr = cmd.ExecuteReader
@@ -491,13 +543,13 @@ Public Class FrmProcess
                 End While
                 Dr.Close()
             Else
-                Dim cmd As New MySqlCommand("select  SUM(Carton_Weight) from Barcode where Batch_no=?batchno and Product_type='W' and status=1 and loc_code=?loc  and product_code=?prod and STR_TO_DATE(store_date, '%Y-%m-%d') = convert(?date,char)")
+                Dim cmd As New MySqlCommand("select  SUM(Carton_Weight) from Barcode where Batch_no=?batchno and Product_type='W' and status=1 and loc_code=?loc  and sap_code=?prod and STR_TO_DATE(store_date, '%Y-%m-%d') = convert(?date,char)")
                 AssignConnection(cmd)
                 With cmd
                     .Parameters.AddWithValue("?batchno", cboBatchno.Text)
                     .Parameters.AddWithValue("?loc", Loc_Code)
                     .Parameters.AddWithValue("?date", Format(DateTimePicker1.Value, "yyyy-MM-dd"))
-                    .Parameters.AddWithValue("?prod", CType(CmbProduct.SelectedItem, itemdata).Value)
+                    .Parameters.AddWithValue("?prod", txtSap.Text)
                 End With
                 Dim i As Integer
                 i = Val(cmd.ExecuteScalar.ToString)
@@ -539,55 +591,71 @@ Public Class FrmProcess
         End If
     End Sub
 
-    Private Sub txtscrapscan_KeyDown(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles txtscrapscan.KeyDown
-        Try
-            If e.KeyCode = Keys.Enter Then
-                If txtscrapscan.Text <> "" Then
-                    For intcount = 0 To listscrap.Count - 1
-                        If txtscrapscan.Text = listscrap.Item(intcount) Then
-                            MsgBox("Already Added Scrap Quantity for this Barcode", MsgBoxStyle.Critical, "BMR")
-                            txtscrapscan.Text = ""
-                            Exit Sub
-                        End If
-                    Next
-                    Dim sqlcmd1 As MySqlCommand
-                    sqlcmd1 = New MySqlCommand("Select * from barcode where carton_serial_no=?cno and product_type='SCR' and status=1 and batch_no=?bno")
-                    AssignConnection(sqlcmd1)
-                    With sqlcmd1
-                        .Parameters.AddWithValue("?cno", txtscrapscan.Text)
-                        .Parameters.AddWithValue("?bno", cboBatchno.Text)
-                    End With
-                    Dr = sqlcmd1.ExecuteReader
-                    If Dr.HasRows Then
-                        While Dr.Read
-                            listscrap.Add(txtscrapscan.Text)
-                            TxtScrapQty.Text = Val(TxtScrapQty.Text) + Dr("carton_weight")
-                        End While
-                    Else
-                        MsgBox("Invalid Scan", MsgBoxStyle.Critical, "BMR")
-                    End If
-                    txtscrapscan.Text = ""
-                    Dr.Close()
+    'Private Sub txtscrapscan_KeyDown(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs)
+    '    Try
+    '        If e.KeyCode = Keys.Enter Then
+    '            If txtscrapscan.Text <> "" Then
+    '                For intcount = 0 To listscrap.Count - 1
+    '                    If txtscrapscan.Text = listscrap.Item(intcount) Then
+    '                        MsgBox("Already Added Scrap Quantity for this Barcode", MsgBoxStyle.Critical, "BMR")
+    '                        txtscrapscan.Text = ""
+    '                        Exit Sub
+    '                    End If
+    '                Next
+    '                Dim sqlcmd1 As MySqlCommand
+    '                sqlcmd1 = New MySqlCommand("Select * from barcode where carton_serial_no=?cno and product_type='SCR' and status=1 and batch_no=?bno")
+    '                AssignConnection(sqlcmd1)
+    '                With sqlcmd1
+    '                    .Parameters.AddWithValue("?cno", txtscrapscan.Text)
+    '                    .Parameters.AddWithValue("?bno", cboBatchno.Text)
+    '                End With
+    '                Dr = sqlcmd1.ExecuteReader
+    '                If Dr.HasRows Then
+    '                    While Dr.Read
+    '                        listscrap.Add(txtscrapscan.Text)
+    '                        TxtScrapQty.Text = Val(TxtScrapQty.Text) + Dr("carton_weight")
+    '                    End While
+    '                Else
+    '                    MsgBox("Invalid Scan", MsgBoxStyle.Critical, "BMR")
+    '                End If
+    '                'txtscrapscan.Text = ""
+    '                Dr.Close()
+    '            Else
+    '                If TxtScrapQty.Text <> "" Then
+    '                    If Val(TxtScrapQty.Text) > Val(txtscanQty.Text) Then
+    '                        C1SuperErrorProvider1.SetError(TxtScrapQty, "Scrap quantity Entered Greater than Scan Qty.Recheck Entered Qty")
+    '                        C1SuperTooltip1.SetToolTip(TxtScrapQty, "Enter Correct Scrap Qty")
+    '                        C1SuperTooltip1.IsBalloon = True
+    '                        TxtScrapQty.Focus()
+    '                    Else
+    '                        C1SuperErrorProvider1.Clear()
+    '                        C1SuperTooltip1.RemoveAll()
+    '                        C1SuperTooltip1.Hide()
+    '                        txtWaste.Text = Val(TxtProcessQty.Text) - Val(txtscanQty.Text) - Val(TxtScrapQty.Text)
+    '                        txtWaste.Focus()
+    '                    End If
+    '                End If
+    '            End If
+    '        End If
+
+    '    Catch ex As Exception
+    '        Dr.Close()
+    '    End Try
+    'End Sub
+
+    Private Sub txtWaste_KeyDown(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles txtWaste.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            If txtWaste.Text <> "" Then
+                TxtProcessQty.Text = Val(txtWaste.Text) + Val(txtscanQty.Text) + Val(TxtScrapQty.Text)
+                btnsave.Focus()
+            Else
+                If MsgBox("Wastage Entry Empty!!Do you want to save as Nil Waste?", MsgBoxStyle.YesNo, "BMR") = MsgBoxResult.No Then
+                    txtWaste.Focus()
                 Else
-                    If TxtScrapQty.Text <> "" Then
-                        If Val(TxtScrapQty.Text) > Val(txtscanQty.Text) Then
-                            C1SuperErrorProvider1.SetError(TxtScrapQty, "Scrap quantity Entered Greater than Scan Qty.Recheck Entered Qty")
-                            C1SuperTooltip1.SetToolTip(TxtScrapQty, "Enter Correct Scrap Qty")
-                            C1SuperTooltip1.IsBalloon = True
-                            TxtScrapQty.Focus()
-                        Else
-                            C1SuperErrorProvider1.Clear()
-                            C1SuperTooltip1.RemoveAll()
-                            C1SuperTooltip1.Hide()
-                            txtWaste.Text = Val(TxtProcessQty.Text) - Val(txtscanQty.Text) - Val(TxtScrapQty.Text)
-                            txtWaste.Focus()
-                        End If
-                    End If
+                    txtWaste.Text = ""
+                    btnsave.Focus()
                 End If
             End If
-
-        Catch ex As Exception
-            Dr.Close()
-        End Try
+        End If
     End Sub
 End Class

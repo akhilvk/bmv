@@ -223,7 +223,7 @@
         ErrorProvider1.Dispose()
         Try
             If txtbatch_no.Text.Trim() <> "" Then
-                Dim dtFBatch As DataTable = ReturningDataByQ("SELECT DISTINCT Batch_nO  FROM Barcode WHERE Product_type ='W' AND Batch_no ='" + txtbatch_no.Text + "'")
+                Dim dtFBatch As DataTable = ReturningDataByQ("SELECT DISTINCT Batch_nO  FROM Barcode WHERE  Batch_no ='" + txtbatch_no.Text + "'")
                 If dtFBatch.Rows.Count > 0 Then
                     ExBatch = dtFBatch.Rows(0)(0)
                 Else
