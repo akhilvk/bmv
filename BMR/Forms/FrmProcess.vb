@@ -429,6 +429,23 @@ Public Class FrmProcess
     Private Function checkdupl() As Boolean
         Dim cmd As New MySqlCommand
         If Me.Tag = 0 Then
+            cmd = New MySqlCommand("Select * from tbl_Inventory where batch_no=?bno and date=?date and type=?type  and Scrap_code=?sap")
+            AssignConnection(cmd)
+            With cmd
+                .Parameters.Add("?bno", cboBatchno.Text)
+                .Parameters.Add("?sap", strScrapcode)
+                .Parameters.Add("?date", Format(DateTimePicker1.Value, "yyyy-MM-dd"))
+                .Parameters.Add("?type", Me.Tag)
+            End With
+            Dr = cmd.ExecuteReader
+            If Dr.HasRows Then
+                MsgBox("Scrap quantity For this Item Already Exist", MsgBoxStyle.OkOnly, "BMR")
+                TxtScrapQty.Text = "0"
+                txtWaste.Text = "0"
+                TxtProcessQty.Text = Val(txtscanQty.Text) + Val(TxtScrapQty.Text) + Val(txtWaste.Text)
+            End If
+            Dr.Close()
+            cmd.Parameters.Clear()
             cmd = New MySqlCommand("Select * from tbl_Inventory where batch_no=?bno and type=?type and loc_code=?loc and SAPcode=?prod")
             AssignConnection(cmd)
             With cmd
@@ -468,6 +485,7 @@ Public Class FrmProcess
             If Dr.HasRows Then
                 MsgBox("Scrap quantity For this Item Already Exist", MsgBoxStyle.OkOnly, "BMR")
                 TxtScrapQty.Text = "0"
+                txtWaste.Text = "0"
                 TxtProcessQty.Text = Val(txtscanQty.Text) + Val(TxtScrapQty.Text) + Val(txtWaste.Text)
             End If
             Dr.Close()
