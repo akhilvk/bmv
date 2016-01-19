@@ -164,22 +164,23 @@
                 Exit Sub
             End If
             Dim a As String = dtcount.ToString()
-            If a.Length = 1 Then
-                a = "0" + a
-            End If
+            
             For i As Integer = 0 To Val(txtcarton_wg.Text) - 1
+                If a.Length = 1 Then
+                    a = "0" + a
+                End If
                 ReadAllText = System.IO.File.ReadAllText(Application.StartupPath & "/Barcode.txt")
-                Dim     Serial_no As String = ""
+                Dim Serial_no As String = ""
                 Dr = SelectQuery("SELECT COUNT(Carton_Serial_no)+10000001 No FROM BARCODE WHERE Loc_Code=" + Loc_Code + "")
                 If Dr.Read Then
                     Serial_no = Dr(0)
                 End If
                 Dr.Close()
-                    Loc_Prefix = FrmMain._LocPrefix
+                Loc_Prefix = FrmMain._LocPrefix
                 Serial_no = "C" & Loc_Prefix & Serial_no
                 Dim datestr As String = FormatTo_yyyy_MM_dd(DateTime.Now)
                 datestr &= " " & Format(DateTime.Now, "HH:mm:ss")
-               
+
                 Dim FullBatch As String = txtbatch_no.Text + a + Loc_Prefix
 
                 'Dim FullBatch As String = txtbatch_no.Text + SortId + Loc_Prefix
@@ -193,9 +194,9 @@
                 ExecuteQuery(query)
                 'synctable(query)
                 ReadAllText = ReadAllText.Replace("[barcode]", Serial_no)
-                ReadAllText = ReadAllText.Replace("[barcode]", Serial_no)
-                ReadAllText = ReadAllText.Replace("[NAME]", CType(cmbproduct.SelectedItem, itemdata).Description)
-                ReadAllText = ReadAllText.Replace("[NAME]", txtbatch_no.Text & "    wt:" & txtcarton_weight.Text)
+                ReadAllText = ReadAllText.Replace("[barcode1]", Serial_no)
+                ReadAllText = ReadAllText.Replace("[name]", CType(cmbproduct.SelectedItem, itemdata).Description)
+                ReadAllText = ReadAllText.Replace("[name1]", txtbatch_no.Text & "    wt:" & txtcarton_weight.Text)
                 StringBuilder &= ReadAllText & vbCrLf
             Next
             CommitTransaction()
