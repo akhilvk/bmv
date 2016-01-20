@@ -1,0 +1,19 @@
+diff a/BMR/Forms/FrmFinalPack.vb b/BMR/Forms/FrmFinalPack.vb	(rejected hunks)
+@@ -217,12 +217,13 @@
+                         objCreator.packet_size = TxtPack.Text
+                         objCreator.Carton_Weight = txtWeight.Text
+                         objCreator.FullBatch_no = FullBatch 'txtBatch.Text + SortId + Loc_Prefix
+-                        b = FullBatch & Format(a, "#0000")
+-                        objCreator.FBatch_no = b
+-                        AddToDt(objCreator, a)
+ 
+-                        a = a + 1
+ 
++                        a = a + 1
++                        b = FullBatch & Format(a, "#0000")
++                        objCreator.FBatch_no = b
++                        AddToDt(objCreator, introw)
++                        introw += 1
+                         Dim QRY1 As String = "INSERT INTO Tbl_FinalPack_Sub (packet_Serial_no,carton_Serial_no,Status,Batch_No) VALUES('" + packet_Serial_no + "','',0,'" + b + "')"
+                         If SaveToDb(QRY1) Then
+                             QRY1 = QRY1.Replace("'", "|")
