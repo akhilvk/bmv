@@ -153,10 +153,14 @@ Public Class FrmProcess
                 txtSap.Focus()
             End If
             Dr.Close()
-            Dr = SelectQuery("select Scrap_code,Waste_code where B.Product_Code=" & CType(CmbProduct.SelectedItem, itemdata).Value & "")
-            If Dr.Read Then
+            Dr = SelectQuery("select Scrap_code,Waste_code from product_master where Product_Code=" & CType(CmbProduct.SelectedItem, itemdata).Value & "")
+            If Dr.HasRows Then
+                Dr.Read()
                 strScrapcode = Dr(0).ToString
                 StrWasteCode = Dr(1).ToString
+            Else
+                strScrapcode = ""
+                StrWasteCode = ""
             End If
             Dr.Close()
             If Me.Tag = 0 Then
