@@ -2,39 +2,42 @@
 Module Print
     Public Function PrintWip(ByVal dt As DataTable, ByVal FrmIndicator As String) As Integer
         Dim _Path As String
+        Dim FCartn As String = ""
         If FrmIndicator = "Final" Then
             _Path = Application.StartupPath & "\Final.txt"
             For i As Integer = 0 To dt.Rows.Count - 1
                 Dim DPL As String = ""
-                DPL = System.IO.File.ReadAllText(_Path)
-                DPL = DPL.Replace("[barcode]", dt.Rows(i)("Carton_Serial_no"))
-                DPL = DPL.Replace("[barcode1]", dt.Rows(i)("Carton_Serial_no"))
-                'DPL = DPL.Replace("[NAME]", dt.Rows(i)("Product"))
-                If FrmIndicator = "W" Then
-                    Dim a As Decimal = dt.Rows(i)("Carton_Weight")
-                    Dim b As Decimal = dt.Rows(i)("packet_size")
-                    Dim c As Decimal
-                    c = a * 1000 / b
-                    DPL = DPL.Replace("[NAME1]", dt.Rows(i)("Batch_No") & "    P Size:" & c & "X" & b)
-                Else
-                    DPL = DPL.Replace("[NAME1]", dt.Rows(i)("Batch_No") & "    wt:" & dt.Rows(i)("Carton_Weight"))
-                End If
-
-                RawPrinterHelper.SendStringToPrinter(DefaultPrinterName(), DPL)
-                If FrmIndicator = "Final" Then
-                    For j As Integer = 0 To dt.Rows.Count - 1
-                        Dim DPL1 As String = ""
-                        DPL1 = System.IO.File.ReadAllText(_Path)
-                        DPL1 = DPL1.Replace("[barcode]", dt.Rows(j)("Packet_Serial_no"))
-                        DPL1 = DPL1.Replace("[barcode1]", dt.Rows(j)("Packet_Serial_no"))
-                        'DPL1 = DPL1.Replace("[NAME]", dt.Rows(j)("Product"))
-                        DPL1 = DPL1.Replace("[NAME1]", dt.Rows(j)("F_Batch") & "    wt:" & dt.Rows(j)("Carton_Weight"))
-
-                        RawPrinterHelper.SendStringToPrinter(DefaultPrinterName(), DPL1)
-                    Next
-                    Exit For
+                If i = 0 Or FCartn <> dt.Rows(i)("Carton_Serial_no") Then
+                    FCartn = dt.Rows(i)("Carton_Serial_no")
+                    DPL = System.IO.File.ReadAllText(_Path)
+                    DPL = DPL.Replace("[barcode]", dt.Rows(i)("Carton_Serial_no"))
+                    DPL = DPL.Replace("[barcode1]", dt.Rows(i)("Carton_Serial_no"))
+                    'DPL = DPL.Replace("[NAME]", dt.Rows(i)("Product"))
+                    If FrmIndicator = "W" Then
+                        Dim a As Decimal = dt.Rows(i)("Carton_Weight")
+                        Dim b As Decimal = dt.Rows(i)("packet_size")
+                        Dim c As Decimal
+                        c = a * 1000 / b
+                        DPL = DPL.Replace("[NAME1]", dt.Rows(i)("Batch_No") & "    P Size:" & c & "X" & b)
+                    Else
+                        DPL = DPL.Replace("[NAME1]", dt.Rows(i)("Batch_No") & "    wt:" & dt.Rows(i)("Carton_Weight"))
+                    End If
+                    RawPrinterHelper.SendStringToPrinter(DefaultPrinterName(), DPL)
                 End If
             Next
+            If FrmIndicator = "Final" Then
+                For j As Integer = 0 To dt.Rows.Count - 1
+                    Dim DPL1 As String = ""
+                    DPL1 = System.IO.File.ReadAllText(_Path)
+                    DPL1 = DPL1.Replace("[barcode]", dt.Rows(j)("Packet_Serial_no"))
+                    DPL1 = DPL1.Replace("[barcode1]", dt.Rows(j)("Packet_Serial_no"))
+                    'DPL1 = DPL1.Replace("[NAME]", dt.Rows(j)("Product"))
+                    DPL1 = DPL1.Replace("[NAME1]", dt.Rows(j)("F_Batch") & "    wt:" & dt.Rows(j)("Carton_Weight"))
+
+                    RawPrinterHelper.SendStringToPrinter(DefaultPrinterName(), DPL1)
+                Next
+            End If
+
         Else
             _Path = Application.StartupPath & "\barcode.txt"
 
