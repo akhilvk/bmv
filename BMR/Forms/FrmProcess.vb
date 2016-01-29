@@ -267,7 +267,7 @@ Public Class FrmProcess
                     Dr.Close()
                     cmd.Parameters.Clear()
                     'cmd.CommandText = "select sum(B.carton_weight) from tbl_scrapstorage A inner join barcode B on A.carton_serial_no=B.carton_serial_no inner join product_master C on c.product_code=A.Product_code inner join scrap_prod_link D on A.Product_code=D.scrap_code  where D.product_code=?prod and A.batch_no=?bno and A.store_date=?date and A.loc_code=?loc"
-                    cmd.CommandText = "select sum(B.carton_weight) from tbl_scrapstorage A inner join barcode B on A.carton_serial_no=B.carton_serial_no inner join product_master C on c.product_code=A.Product_code   where A.Sap_code=?prod and A.batch_no=?bno and A.store_date=?date and A.loc_code=?loc"
+                    cmd.CommandText = "select sum(B.carton_weight) from tbl_scrapstorage A inner join barcode B on A.carton_serial_no=B.carton_serial_no inner join product_master C on c.product_code=A.Product_code    where c.Sap_code=?prod and A.batch_no=?bno and A.store_date=?date and A.loc_code=?loc"
                     AssignConnection(cmd)
                     With cmd
                         .Parameters.AddWithValue("?bno", cboBatchno.Text)
@@ -338,7 +338,7 @@ Public Class FrmProcess
                     End If
                     Dr.Close()
                     cmd.Parameters.Clear()
-                    cmd.CommandText = "select sum(B.carton_weight) from tbl_scrapstorage A inner join barcode B on A.carton_serial_no=B.carton_serial_no inner join product_master C on c.product_code=A.Product_code   where A.Sap_code=?prod and A.batch_no=?bno and A.store_date=?date and A.loc_code=?loc"
+                    cmd.CommandText = "select sum(B.carton_weight) from tbl_scrapstorage A inner join barcode B on A.carton_serial_no=B.carton_serial_no inner join product_master C on c.product_code=A.Product_code    where c.Sap_code=?prod and A.batch_no=?bno and A.store_date=?date and A.loc_code=?loc"
                     AssignConnection(cmd)
                     With cmd
                         .Parameters.AddWithValue("?bno", cboBatchno.Text)
@@ -526,7 +526,7 @@ Public Class FrmProcess
         If validateme() = True And checkdupl() = False Then
             If MsgBox("Do you want to Save?", MsgBoxStyle.YesNo, "BMR") = MsgBoxResult.Yes Then
                 Try
-                    cmd = New MySqlCommand("Insert into tbl_Inventory values(?bno,?sap,?prod,?date,?pqty,?scanqty,?scrap,?wqty,?type,?loc,?Scrapcode)")
+                    cmd = New MySqlCommand("Insert into tbl_Inventory values(?bno,?sap,?prod,?date,?pqty,?scanqty,?scrap,?wqty,?type,?loc,?Scrapcode,?Wastecode)")
                     AssignConnection(cmd)
                     With cmd
                         .Parameters.AddWithValue("?bno", cboBatchno.Text)

@@ -66,6 +66,9 @@
                     Dr.Close()
                 End If
                 cmbproduct.Text = strprod
+                cmbproduct.Focus()
+                SendKeys.Send("{ENTER}")
+                txtbatch_no.Focus()
             Catch ex As Exception
                 txtsap_code.Text = ""
                 'Dr.Close()

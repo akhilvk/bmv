@@ -2,6 +2,7 @@
     Dim Carton_Serial_no As String
     Dim SortId, fullbatch, ExBatch As String
     Dim dtprint As New DataTable
+    Dim blnsap As Boolean
     Public Class barcode
         Public Carton_Serial_no As String
         Public Product As String
@@ -51,7 +52,7 @@
         txtSap.AutoCompleteSource = AutoCompleteSource.CustomSource
         txtSap.AutoCompleteCustomSource = col
         txtSap.AutoCompleteMode = AutoCompleteMode.Suggest
-
+        blnsap = False
         txtSap.Text = ""
         txtBatch.Text = ""
         TxtPack.Text = ""
@@ -225,7 +226,7 @@
     End Sub
 
     Private Sub CmbProduct_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles CmbProduct.SelectedIndexChanged
-        If CmbProduct.Text <> "" Then
+        If CmbProduct.Text <> "" And Not blnsap Then
             Dr = SelectQuery("select SAP_Code from Product_Master where Product_Code=" & CType(CmbProduct.SelectedItem, itemdata).Value & "")
             If Dr.Read Then
                 txtSap.Text = Dr("SAP_Code")
@@ -245,18 +246,19 @@
             Dr = SelectQuery("select Product_Name,Product_type from Product_Master where SAP_Code='" & txtSap.Text.Trim & "'")
             If Dr.Read Then
                 Try
+                    blnsap = True
                     CmbProduct.Text = Dr("Product_Name")
                     a = Dr("Product_type")
-                    If a <> "W" Then
-                        CmbProduct.Text = ""
-                        seterr(txtSap, "The Product is not a WIP Type")
-                        txtSap.Focus()
-                    End If
+                    'If a <> "W" Then
+                    '    CmbProduct.Text = ""
+                    '    seterr(txtSap, "The Product is not a WIP Type")
+                    '    txtSap.Focus()
+                    'End If
                     Dr.Close()
                 Catch ex As Exception
-
+                    Dr.Close()
                 End Try
-                SendKeys.Send("{tab}")
+                txtBatch.Focus()
             End If
 
         End If
