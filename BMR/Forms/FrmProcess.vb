@@ -526,7 +526,7 @@ Public Class FrmProcess
         If validateme() = True And checkdupl() = False Then
             If MsgBox("Do you want to Save?", MsgBoxStyle.YesNo, "BMR") = MsgBoxResult.Yes Then
                 Try
-                    cmd = New MySqlCommand("Insert into tbl_Inventory values(?bno,?sap,?prod,?date,?pqty,?scanqty,?scrap,?wqty,?type,?loc,?Scrapcode,?Wastecode)")
+                    cmd = New MySqlCommand("Insert into tbl_Inventory values(?bno,?sap,?prod,?date,?pqty,?scanqty,?scrap,?wqty,?type,?loc,?Scrapcode,?Wastecode,0)")
                     AssignConnection(cmd)
                     With cmd
                         .Parameters.AddWithValue("?bno", cboBatchno.Text)
