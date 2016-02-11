@@ -48,6 +48,9 @@ Partial Class FrmProcess
         Me.btnsave = New C1.Win.C1Input.C1Button
         Me.C1SuperErrorProvider1 = New C1.Win.C1SuperTooltip.C1SuperErrorProvider(Me.components)
         Me.C1SuperTooltip1 = New C1.Win.C1SuperTooltip.C1SuperTooltip(Me.components)
+        Me.Label10 = New System.Windows.Forms.Label
+        Me.Label11 = New System.Windows.Forms.Label
+        Me.Label12 = New System.Windows.Forms.Label
         CType(Me.C1ThemeController1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.btnClose, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.btnClear, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -87,6 +90,9 @@ Partial Class FrmProcess
         'GroupBox1
         '
         Me.GroupBox1.BackColor = System.Drawing.Color.White
+        Me.GroupBox1.Controls.Add(Me.Label12)
+        Me.GroupBox1.Controls.Add(Me.Label11)
+        Me.GroupBox1.Controls.Add(Me.Label10)
         Me.GroupBox1.Controls.Add(Me.DateTimePicker1)
         Me.GroupBox1.Controls.Add(Me.cboBatchno)
         Me.GroupBox1.Controls.Add(Me.CmbProduct)
@@ -332,6 +338,45 @@ Partial Class FrmProcess
         Me.C1SuperTooltip1.Font = New System.Drawing.Font("Tahoma", 8.0!)
         Me.C1ThemeController1.SetTheme(Me.C1SuperTooltip1, "(default)")
         '
+        'Label10
+        '
+        Me.Label10.AutoSize = True
+        Me.Label10.BackColor = System.Drawing.Color.White
+        Me.Label10.ForeColor = System.Drawing.Color.FromArgb(CType(CType(96, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(23, Byte), Integer))
+        Me.Label10.Location = New System.Drawing.Point(314, 189)
+        Me.Label10.Name = "Label10"
+        Me.Label10.Size = New System.Drawing.Size(45, 13)
+        Me.Label10.TabIndex = 22
+        Me.Label10.Text = "Label10"
+        Me.C1ThemeController1.SetTheme(Me.Label10, "(default)")
+        Me.Label10.Visible = False
+        '
+        'Label11
+        '
+        Me.Label11.AutoSize = True
+        Me.Label11.BackColor = System.Drawing.Color.White
+        Me.Label11.ForeColor = System.Drawing.Color.FromArgb(CType(CType(96, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(23, Byte), Integer))
+        Me.Label11.Location = New System.Drawing.Point(314, 221)
+        Me.Label11.Name = "Label11"
+        Me.Label11.Size = New System.Drawing.Size(45, 13)
+        Me.Label11.TabIndex = 23
+        Me.Label11.Text = "Label11"
+        Me.C1ThemeController1.SetTheme(Me.Label11, "(default)")
+        Me.Label11.Visible = False
+        '
+        'Label12
+        '
+        Me.Label12.AutoSize = True
+        Me.Label12.BackColor = System.Drawing.Color.White
+        Me.Label12.ForeColor = System.Drawing.Color.FromArgb(CType(CType(96, Byte), Integer), CType(CType(169, Byte), Integer), CType(CType(23, Byte), Integer))
+        Me.Label12.Location = New System.Drawing.Point(314, 253)
+        Me.Label12.Name = "Label12"
+        Me.Label12.Size = New System.Drawing.Size(45, 13)
+        Me.Label12.TabIndex = 24
+        Me.Label12.Text = "Label12"
+        Me.C1ThemeController1.SetTheme(Me.Label12, "(default)")
+        Me.Label12.Visible = False
+        '
         'FrmProcess
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -380,4 +425,7 @@ Partial Class FrmProcess
     Friend WithEvents CmbProduct As System.Windows.Forms.ComboBox
     Friend WithEvents cboBatchno As System.Windows.Forms.ComboBox
     Friend WithEvents DateTimePicker1 As System.Windows.Forms.DateTimePicker
+    Friend WithEvents Label12 As System.Windows.Forms.Label
+    Friend WithEvents Label11 As System.Windows.Forms.Label
+    Friend WithEvents Label10 As System.Windows.Forms.Label
 End Class

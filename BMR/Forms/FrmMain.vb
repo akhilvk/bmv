@@ -153,8 +153,8 @@ Public Class FrmMain
     End Sub
 
     Private Sub ScrapAndWastageAfterSFGToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ScrapAndWastageAfterSFGToolStripMenuItem.Click
-        ShowForm(FrmProcess)
         FrmProcess.Tag = 0
+        ShowForm(FrmProcess)
     End Sub
     Private Sub FrmMain_MouseClick(ByVal sender As Object, ByVal e As System.Windows.Forms.MouseEventArgs) Handles Me.MouseClick
         If MouseButtons = Windows.Forms.MouseButtons.None Then

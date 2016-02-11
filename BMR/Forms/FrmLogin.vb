@@ -81,7 +81,9 @@ Public Class FrmLogin
         End Try
     End Sub
     Private Sub FrmLogin_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-        ConnectToDB()
+        If ConnectToDB() = False Then
+            Application.Exit()
+        End If
     End Sub
 
     Private Sub Cancel_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles Cancel.Click

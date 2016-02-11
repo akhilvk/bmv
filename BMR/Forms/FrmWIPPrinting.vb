@@ -60,6 +60,8 @@
         txtWeight.Text = ""
         CmbProduct.Text = ""
         CmbProduct.Focus()
+        ExBatch = ""
+        fullbatch = ""
         Try
             If dtprint.Rows.Count > 0 Then
                 dtprint.Rows.Clear()
@@ -131,9 +133,9 @@
             Return False
         End If
         If ExBatch = "" Then
-            ErrorProvider1.SetError(txtBatch, "Please Enter Valid Batch No")
-            txtBatch.Focus()
-            Return False
+            'ErrorProvider1.SetError(txtBatch, "Please Enter Valid Batch No")
+            'txtBatch.Focus()
+            'Return False
         End If
         Return True
     End Function
@@ -184,7 +186,11 @@
                     'FrmMain._LocPrefix = "K"
                     Dim dt As DataTable = ReturningDataByQ("SELECT COUNT(Carton_Serial_no)+10000001 No FROM BARCODE WHERE Loc_Code=" & Loc_Code & "")
                     Carton_Serial_no = "W" + FrmMain._LocPrefix + dt.Rows(0)(0).ToString()
-                    fullbatch = ExBatch + FrmMain._LocPrefix
+                    If ExBatch = txtBatch.Text Then
+                        fullbatch = ExBatch + Format(intcount + 1, "#00") + FrmMain._LocPrefix + FrmMain._LocPrefix
+                    Else
+                        fullbatch = ExBatch + FrmMain._LocPrefix
+                    End If
                     'QRY1 = "INSERT INTO Tbl_WIP_Sub (carton_Serial_no,packet_Serial_no,status)VALUES ('" & SubCarton & "','" & Carton_Serial_no & "',0)"
                     'If SaveToDb(QRY1) Then
                     '    QRY1 = QRY1.Replace("'", "|")
@@ -299,7 +305,13 @@
                 Else
                     If ExBatch = "" Then
                         ErrorProvider1.SetError(txtBatch, "Please Enter Valid Batch No")
-                        txtBatch.Focus()
+                        If MsgBox("SFG Not Available for This Batch.Do You wish to Continue?", MsgBoxStyle.YesNo, "BMR") = MsgBoxResult.Yes Then
+                            ExBatch = txtBatch.Text
+                            ErrorProvider1.Clear()
+                            TxtPack.Focus()
+                        Else
+                            txtBatch.Focus()
+                        End If
                         Exit Sub
                     End If
                 End If

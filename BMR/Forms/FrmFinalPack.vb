@@ -268,25 +268,24 @@
 
                 Exit Sub
             End If
+            Dim dt As New DataTable
             Dr = SelectQuery("select Product_Name,Product_type from Product_Master where SAP_Code='" & txtSap.Text.Trim & "'")
-            If Dr.Read Then
-                Try
-                    CmbProduct.Text = Dr("Product_Name")
-                    Dim a As String = Dr("Product_type")
-                    If a <> "FG" Then
-                        CmbProduct.Text = ""
-                        seterr(txtSap, "The Product is not a FG Type")
-                        txtSap.Focus()
-                    End If
+            dt.Load(Dr)
+            CmbProduct.Text = dt.Rows(0)("Product_Name")
+            'Dim a As String = Dr("Product_type")
+            'If a <> "FG" Then
+            '    CmbProduct.Text = ""
+            '    seterr(txtSap, "The Product is not a FG Type")
+            '    txtSap.Focus()
+            'End If
+            'Dr.Close()
+            '    Catch ex As Exception
 
-                Catch ex As Exception
-
-                End Try
-                SendKeys.Send("{tab}")
-                Dr.Close()
-            End If
+            'End Try
+            SendKeys.Send("{tab}")
 
         End If
+
     End Sub
 
     Private Sub CmbProduct_KeyDown(ByVal sender As System.Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles CmbProduct.KeyDown, txtWeight.KeyDown, TxtPack.KeyDown, txtBatch.KeyDown, CmbSort.KeyDown
