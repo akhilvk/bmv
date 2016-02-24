@@ -184,7 +184,7 @@
                 Dim datetim As DateTime = FormatTo_yyyy_MM_dd(DateTime.Now)
                 For intcount = 0 To Val(TxtQty.Text) - 1
                     'FrmMain._LocPrefix = "K"
-                    Dim dt As DataTable = ReturningDataByQ("SELECT COUNT(Carton_Serial_no)+10000001 No FROM BARCODE WHERE Loc_Code=" & Loc_Code & "")
+                    Dim dt As DataTable = ReturningDataByQ("SELECT IFNULL( MAX( SUBSTRING( carton_serial_no, 3, LENGTH( carton_serial_no ) ) ) , 10000000 ) +1 from barcode WHERE  Loc_Code=" & Loc_Code & "")
                     Carton_Serial_no = "W" + FrmMain._LocPrefix + dt.Rows(0)(0).ToString()
                     If ExBatch = txtBatch.Text Then
                         fullbatch = ExBatch + Format(intcount + 1, "#00") + FrmMain._LocPrefix + FrmMain._LocPrefix

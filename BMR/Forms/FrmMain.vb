@@ -267,4 +267,8 @@ Public Class FrmMain
         C1RadialMenu1.HideMenu()
         ShowForm(FrmScrapPrint)
     End Sub
+
+    Private Sub BarcodeReprintToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles BarcodeReprintToolStripMenuItem.Click
+        ShowForm(FrmReprint)
+    End Sub
 End Class

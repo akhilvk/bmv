@@ -65,6 +65,7 @@ Partial Class FrmMain
         Me.DespatchReportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
         Me.ReceiptReportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
         Me.InvoiceReportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
+        Me.BarcodeReprintToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem
         CType(Me.C1ThemeController1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.C1StatusBar1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.C1SuperErrorProvider1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -222,7 +223,7 @@ Partial Class FrmMain
         '
         'TransactionsToolStripMenuItem
         '
-        Me.TransactionsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SFGPrintingToolStripMenuItem, Me.ScrapAndWastageAfterSFGToolStripMenuItem, Me.WIPBarToolStripMenuItem, Me.ScrapAndWastageAfterWIPToolStripMenuItem, Me.FinalPacketFinalCaronPrintingToolStripMenuItem, Me.ToolStripMenuItem1})
+        Me.TransactionsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SFGPrintingToolStripMenuItem, Me.ScrapAndWastageAfterSFGToolStripMenuItem, Me.WIPBarToolStripMenuItem, Me.ScrapAndWastageAfterWIPToolStripMenuItem, Me.FinalPacketFinalCaronPrintingToolStripMenuItem, Me.ToolStripMenuItem1, Me.BarcodeReprintToolStripMenuItem})
         Me.TransactionsToolStripMenuItem.Name = "TransactionsToolStripMenuItem"
         Me.TransactionsToolStripMenuItem.Size = New System.Drawing.Size(86, 19)
         Me.TransactionsToolStripMenuItem.Text = "Transactions"
@@ -312,6 +313,12 @@ Partial Class FrmMain
         Me.InvoiceReportToolStripMenuItem.Size = New System.Drawing.Size(217, 22)
         Me.InvoiceReportToolStripMenuItem.Text = "Invoice Report"
         '
+        'BarcodeReprintToolStripMenuItem
+        '
+        Me.BarcodeReprintToolStripMenuItem.Name = "BarcodeReprintToolStripMenuItem"
+        Me.BarcodeReprintToolStripMenuItem.Size = New System.Drawing.Size(233, 22)
+        Me.BarcodeReprintToolStripMenuItem.Text = "Barcode Reprint"
+        '
         'FrmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 20.0!)
@@ -381,5 +388,6 @@ Partial Class FrmMain
     Friend WithEvents RadialMenuItem12 As C1.Win.C1Command.RadialMenuItem
     Friend WithEvents RadialMenuItem13 As C1.Win.C1Command.RadialMenuItem
     Friend WithEvents ToolStripMenuItem1 As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents BarcodeReprintToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 
 End Class

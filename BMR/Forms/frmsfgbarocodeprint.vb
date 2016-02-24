@@ -174,7 +174,7 @@
                 End If
                 ReadAllText = System.IO.File.ReadAllText(Application.StartupPath & "/Barcode.txt")
                 Dim Serial_no As String = ""
-                Dr = SelectQuery("SELECT COUNT(Carton_Serial_no)+10000001 No FROM BARCODE WHERE Loc_Code=" + Loc_Code + "")
+                Dr = SelectQuery("SELECT IFNULL( MAX( SUBSTRING( carton_serial_no, 3, LENGTH( carton_serial_no ) ) ) , 10000000 ) +1 FROM  `barcode` WHERE Loc_Code=" + Loc_Code + "")
                 If Dr.Read Then
                     Serial_no = Dr(0)
                 End If

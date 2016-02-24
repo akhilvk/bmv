@@ -192,7 +192,7 @@
                 Loc_Prefix = FrmMain._LocPrefix
                 FullBatch = ExBatch + Loc_Prefix
                 For intcount1 = 0 To Val(TxtQty.Text) - 1
-                    Dim dt As DataTable = ReturningDataByQ("SELECT COUNT(Carton_Serial_no)+10000001 No FROM BARCODE WHERE Loc_Code=" & Loc_Code & "")
+                    Dim dt As DataTable = ReturningDataByQ("SELECT IFNULL( MAX( SUBSTRING( carton_serial_no, 3, LENGTH( carton_serial_no ) ) ) , 10000000 ) +1 from barcode WHERE Loc_Code=" & Loc_Code & "")
                     Carton_Serial_no = "F" + Loc_Prefix + dt.Rows(0)(0).ToString()
 
                     Dim QRY As String = "INSERT INTO Barcode (Carton_Serial_no,Product_code,Product_type,Pur_date,pur_loc,Batch_no,Loc_code,user_code,packet_size,Carton_Weight,status,FullBatch,Sap_Code)  VALUES ('" + Carton_Serial_no + "'," & CType(CmbProduct.SelectedItem, itemdata).Value & ",'FG',now()," & Loc_Code & ",'" + txtBatch.Text + "'," & Loc_Code & "," & FrmMain._UserCode & "," & TxtPack.Text & "," & txtWeight.Text & ",0,'" & FullBatch & "','" & txtSap.Text & "')"
@@ -203,7 +203,7 @@
                     End If
 
                     For intcount = 0 To Val(txtCount.Text) - 1
-                        Dim dt1 As DataTable = ReturningDataByQ("SELECT COUNT(packet_Serial_no)+10000001 No FROM Tbl_FinalPack_Sub")
+                        Dim dt1 As DataTable = ReturningDataByQ("SELECT IFNULL( MAX( SUBSTRING( packet_serial_no, 3, LENGTH( packet_serial_no ) ) ) , 10000000 )+1  FROM Tbl_FinalPack_Sub")
                         packet_Serial_no = "P" + Loc_Prefix + dt1.Rows(0)(0).ToString()
 
                         objCreator.Carton_Serial_no = Carton_Serial_no
