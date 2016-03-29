@@ -129,11 +129,23 @@ Public Class FrmMain
             For i As Integer = 0 To items.DropDownItems.Count - 1
                 If _menuPer(intmenu) = 1 Then
                     items.DropDownItems(i).Visible = True
+
                 End If
                 intmenu += 1
             Next
         Next
-       
+        intmenu = 0
+        For Each items As C1.Win.C1Command.RadialMenuItem In C1RadialMenu1.Items
+            For i As Integer = 0 To items.Items.Count - 1
+                If _menuPer(intmenu) = 1 Then
+                    '= True
+                    items.Items(i).Enabled = True
+                Else
+                    items.Items(i).Enabled = False
+                End If
+                intmenu += 1
+            Next
+        Next
     End Sub
 
     Private Sub ProductionReportToolStripMenuItem_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ProductionReportToolStripMenuItem.Click

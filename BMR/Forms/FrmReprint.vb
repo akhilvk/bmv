@@ -5,7 +5,7 @@ Public Class FrmReprint
         Dim _path As String
         If TextBox1.Text <> "" Then
             If TextBox1.Text.Substring(0, 1) = "C" Then
-                Dim dt1 As DataTable = ReturningDataByQ("Select * from barcode where carton_serial_no='" & TextBox1.Text & "' and Product_type='SFG'")
+                Dim dt1 As DataTable = ReturningDataByQ("Select * from barcode A inner join product_master B on A.Product_code=B.product_code  where A.carton_serial_no='" & TextBox1.Text & "' and A.Product_type='SFG'")
                 If dt1.Rows.Count = 0 Then
                     MsgBox("No barcode exist for this No", MsgBoxStyle.Critical, "BMR")
                     Exit Sub
@@ -17,7 +17,7 @@ Public Class FrmReprint
                         DPL = System.IO.File.ReadAllText(_path)
                         DPL = DPL.Replace("[barcode]", dt1.Rows(i)("Carton_Serial_no"))
                         DPL = DPL.Replace("[barcode1]", dt1.Rows(i)("Carton_Serial_no"))
-                        DPL = DPL.Replace("[name]", dt1.Rows(i)("Product"))
+                        DPL = DPL.Replace("[name]", dt1.Rows(i)("Product_name"))
                         DPL = DPL.Replace("[name1]", dt1.Rows(i)("Batch_No") & "    wt:" & dt1.Rows(i)("Carton_Weight"))
                         RawPrinterHelper.SendStringToPrinter(DefaultPrinterName(), DPL)
                     Next
